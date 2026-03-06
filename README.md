@@ -8,9 +8,11 @@ Forecasting BTCUSD prices using historical market data with deep learning models
 
 ## **Core Components**
 
-### **1. Time Series Forecasting (RNN)**
-- **Model Architecture**: LSTM (Long Short-Term Memory) or GRU (Gated Recurrent Unit) for capturing long-term dependencies in price data.
-- **Features**: Historical OHLCV (Open, High, Low, Close, Volume), technical indicators (RSI, Moving Averages), and potentially sentiment data.
+### **1. Time Series Forecasting Models**
+- **Linear Regression**: A simple baseline model predicting future price based on current market features (Close, Volume, Moving Averages).
+- **ARIMA**: AutoRegressive Integrated Moving Average model for univariate time series forecasting.
+- **RNN (Optional)**: LSTM/GRU architectures for capturing complex non-linear dependencies (advanced use case).
+- **Features**: Historical OHLCV (Open, High, Low, Close, Volume), technical indicators (RSI, Moving Averages).
 - **Objective**: Predict the next-period price or price movement direction.
 
 ### **2. MLflow Experiments & Model Registry**
@@ -47,7 +49,9 @@ Forecasting BTCUSD prices using historical market data with deep learning models
 - [ ] Perform Exploratory Data Analysis (EDA) and feature engineering.
 
 ### **Phase 2: Modeling & MLflow Integration**
-- [ ] Develop the RNN model (LSTM/GRU).
+- [] Develop Linear Regression model (`src/models/linear_regression.py`).
+- [] Develop ARIMA model (`src/models/arima_model.py`).
+- [ ] (Optional) Develop RNN model (LSTM/GRU).
 - [ ] Integrate MLflow for experiment tracking.
 - [ ] Implement a basic training pipeline.
 
@@ -80,7 +84,10 @@ Forecasting BTCUSD prices using historical market data with deep learning models
 ├── src/                    # ML logic
 │   ├── data/               # Data ingestion & preprocessing
 │   ├── features/           # Feature engineering
-│   ├── models/             # RNN architecture & training
+│   ├── models/             # Model architectures & training
+│   │   ├── linear_regression.py  # Linear Regression implementation
+│   │   ├── arima_model.py        # ARIMA implementation
+│   │   └── train.py              # RNN/General training script
 │   ├── monitoring/         # Drift detection logic
 │   └── tests/              # ML unit & integration tests
 ├── .github/workflows/      # CI/CD pipelines
