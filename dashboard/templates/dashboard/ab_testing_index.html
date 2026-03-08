@@ -11,6 +11,32 @@
         <h5 class="card-title mb-0">Active Tests</h5>
     </div>
     <div class="card-body">
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card bg-light border-0">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted mb-1">LR Baseline MSE</h6>
+                        <h4 class="mb-0 text-primary">{{ lr_mse }}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-light border-0">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted mb-1">ARIMA Forecast MSE</h6>
+                        <h4 class="mb-0 text-info">{{ arima_mse }}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-light border-0">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted mb-1">Current Winner</h6>
+                        <h4 class="mb-0 text-success">{{ winner }}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
@@ -27,11 +53,11 @@
                     {% for test in active_tests %}
                     <tr>
                         <td>{{ test.test_name }}</td>
-                        <td>{{ test.control_model_version }}</td>
-                        <td>{{ test.treatment_model_version }}</td>
-                        <td><span class="badge bg-success">+{{ test.improvement_pct }}%</span></td>
+                        <td>{{ test.control_v }}</td>
+                        <td>{{ test.treatment_v }}</td>
+                        <td><span class="badge bg-{{ test.improvement_class }}">{{ test.improvement }}</span></td>
                         <td><span class="badge bg-info">{{ test.status }}</span></td>
-                        <td>{{ test.start_date|date:"Y-m-d" }}</td>
+                        <td>{{ test.started_at }}</td>
                     </tr>
                     {% empty %}
                     <tr>

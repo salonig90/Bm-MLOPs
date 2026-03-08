@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="pt-3">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'blog_list' %}">Blogs</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Understanding Drift Detection</li>
+  </ol>
+</nav>
+
+<div class="row mt-4">
+    <div class="col-md-9 mx-auto">
+        <article class="bg-white p-5 rounded shadow-sm border">
+            <h1 class="display-4 mb-4 text-primary">Drift Detection: Navigating the BTCUSD Path Ahead</h1>
+            <p class="lead text-muted mb-5">How statistical distribution shifts provide the early warning signals our models need to stay accurate in a volatile market.</p>
+
+            <img src="https://images.unsplash.com/photo-1621761191319-c6fb62004040?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80" class="img-fluid rounded mb-5" alt="BTC Visualization">
+
+            <section class="mb-5">
+                <h2 class="h3 text-dark mb-3">What is Drift, and Why Does it Matter?</h2>
+                <p>In the world of Bitcoin trading, the only constant is change. But for a machine learning model, "change" can be a silent killer. <strong>Model Drift</strong> occurs when the real-world data starts to behave differently from the data the model was originally trained on.</p>
+                <p>Think of it like a GPS. If the roads are constantly shifting, but your map stays the same, you'll eventually end up in the wrong place. Drift detection is our way of checking if the "roads" (the price patterns of BTCUSD) are still where our map says they are.</p>
+            </section>
+
+            <section class="mb-5 bg-light p-4 rounded border-start border-4 border-primary">
+                <h2 class="h3 text-dark mb-3">How Drift Helps Us "See" the Path</h2>
+                <p>When we monitor the distribution of BTCUSD prices over the last 24 hours and compare them to the previous 24 hours, we aren't just looking at the price—we are looking at the <strong>market regime</strong>.</p>
+                <ul>
+                    <li class="mb-2"><strong>The Stable Path:</strong> When distributions overlap closely, it confirms that the current market dynamics are consistent. Our Linear Regression and ARIMA models are likely to be highly reliable in this phase.</li>
+                    <li class="mb-2"><strong>The Shift Alert:</strong> A significant shift in the mean price distribution (the "Mean Shift" you see in our monitoring dashboard) tells us that the market is entering a new price discovery phase. This is an early warning that the "path" is changing.</li>
+                    <li class="mb-2"><strong>The Prediction Reliability:</strong> If we detect a 10% drift, we know our predictions for the next few hours might be based on "old rules." This insight allows us to either retrain the model or adjust our risk management accordingly.</li>
+                </ul>
+            </section>
+
+            <section class="mb-5">
+                <h2 class="h3 text-dark mb-3">The Next Few Hours: Predicting the Unknown</h2>
+                <p>By identifying drift <em>before</em> it ruins our accuracy, we can anticipate the path BTCUSD may take. For example, if we see a <strong>positive mean shift</strong> combined with a tightening distribution, it often signals a breakout. Conversely, a <strong>widening distribution</strong> (increased volatility) tells us the model's confidence in the next few hours should be lower.</p>
+                <p>Ultimately, drift detection transforms a "black box" prediction into a transparent insight. It tells us not just <em>what</em> the model thinks will happen, but <em>how much we should trust it</em> based on the current state of the market roads.</p>
+            </section>
+
+            <footer class="mt-5 pt-5 border-top">
+                <p class="text-muted small">Written by the BTC Forecasting Team &bull; March 6, 2026</p>
+                <a href="{% url 'blog_list' %}" class="btn btn-outline-secondary btn-sm">Back to Blogs</a>
+            </footer>
+        </article>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Model Drift Monitoring</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <span class="badge {% if drift_status == 'Stable' %}bg-success{% elif 'Warning' in drift_status %}bg-warning{% else %}bg-danger{% endif %} p-2">
+            Status: {{ drift_status }}
+        </span>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <!-- Drift Visualization -->
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">Feature Distribution Drift</h5>
+            </div>
+            <div class="card-body">
+                {% if plot_div %}
+                    {{ plot_div|safe }}
+                {% else %}
+                    <div class="text-center py-5">
+                        <p class="text-muted">Insufficient data for distribution analysis. Need at least 48 hours of historical data.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Drift Statistics -->
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">Drift Details</h5>
+            </div>
+            <div class="card-body">
+                {% for detail in drift_details %}
+                <div class="mb-3 p-3 border rounded">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="mb-0 text-primary">{{ detail.feature }}</h6>
+                        <span class="badge {% if detail.status == 'OK' %}bg-success{% else %}bg-danger{% endif %}">{{ detail.status }}</span>
+                    </div>
+                    <div class="row small text-muted">
+                        <div class="col-6">Recent Mean:</div>
+                        <div class="col-6 text-end"><strong>{{ detail.recent_mean }}</strong></div>
+                        <div class="col-6">Prev Mean:</div>
+                        <div class="col-6 text-end"><strong>{{ detail.prev_mean }}</strong></div>
+                        <div class="col-6">Mean Shift:</div>
+                        <div class="col-6 text-end"><strong class="{% if detail.status != 'OK' %}text-danger{% endif %}">{{ detail.change }}</strong></div>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-center text-muted">No drift details available.</p>
+                {% endfor %}
+                <hr>
+                <div class="alert alert-info py-2 small mb-0">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Last calculated: {{ last_updated }}
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4 shadow-sm border-warning">
+            <div class="card-body">
+                <h6 class="card-title text-warning"><i class="bi bi-exclamation-triangle me-1"></i> Why Monitor Drift?</h6>
+                <p class="card-text small text-muted">
+                    Model performance can degrade over time as real-world BTCUSD price patterns change. 
+                    Monitoring <strong>Feature Drift</strong> (shifts in price distribution) helps us decide when it's time to retrain our models.
+                </p>
+                <form action="{% url 'run_pipeline' %}" method="post" class="d-grid">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-warning btn-sm">Force Retrain Models</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

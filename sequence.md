@@ -14,13 +14,13 @@ MLflow does not orchestrate or trigger ingestion/training/dashboard by itself.
 
 In this repo, MLflow is used in a passive way:
 - Training scripts call MLflow APIs (`mlflow.start_run`, `mlflow.log_metric`, `mlflow.log_model`) while they run.
-- Those APIs write metadata + artifacts into the tracking backend (currently the local filesystem at `./mlruns`).
+- Those APIs write metadata + artifacts into the tracking backend (currently the local filesystem at `./ml/mlruns`).
 - The MLflow server is only a UI/API layer that reads from the same tracking backend so you can view runs in the browser.
 - Django uses `MlflowClient()` to read run/registry metadata at request-time. Depending on configuration, it can read from the local store or from a remote tracking server.
 
 Two common modes:
-- Local-only (no MLflow server): scripts still log to `./mlruns`; you just don’t have the web UI.
-- With MLflow server: you start the server process; the UI becomes available and reads the same `./mlruns` store.
+- Local-only (no MLflow server): scripts still log to `./ml/mlruns`; you just don’t have the web UI.
+- With MLflow server: you start the server process; the UI becomes available and reads the same `./ml/mlruns` store.
 
 ## Main Flow (Ingestion → Training → MLflow → Dashboard)
 
@@ -33,7 +33,7 @@ sequenceDiagram
   participant Processed as data/processed/btcusd_processed.csv
   participant LR as src/models/linear_regression.py
   participant ARIMA as src/models/arima_model.py
-  participant MLflowTracking as MLflow Tracking Store (./mlruns)
+  participant MLflowTracking as MLflow Tracking Store (./ml/mlruns)
   participant MLflowUI as MLflow Server (python -m mlflow server)
   participant Django as Django Dashboard (dashboard/)
   participant MlflowClient as MLflow Client (Django)
@@ -80,7 +80,7 @@ sequenceDiagram
   actor User
   participant Browser as Browser
   participant MLflowUI as MLflow Server (python -m mlflow server)
-  participant MLflowTracking as Tracking Store (./mlruns)
+  participant MLflowTracking as Tracking Store (./ml/mlruns)
 
   User->>MLflowUI: Start MLflow server process
   Browser->>MLflowUI: GET /
@@ -94,7 +94,7 @@ Some environments block `localhost` access due to MLflow’s security middleware
 If needed, start MLflow with explicit host/CORS/allowed-hosts for development:
 
 ```bash
-python3 -m mlflow server --host 0.0.0.0 --port 5001 --backend-store-uri ./mlruns --allowed-hosts "*" --cors-allowed-origins "*"
+python3 -m mlflow server --host 0.0.0.0 --port 5001 --backend-store-uri ./ml/mlruns --allowed-hosts "*" --cors-allowed-origins "*"
 ```
 
 ## Monitoring Flow (Drift Detection)
@@ -134,7 +134,7 @@ sequenceDiagram
   participant AB as dashboard/ab_testing (DB models)
   participant ROI as dashboard/roi (DB models)
   participant MlflowClient as MLflow Client (Django)
-  participant MLflowTracking as MLflow Tracking Store (./mlruns)
+  participant MLflowTracking as MLflow Tracking Store (./ml/mlruns)
 
   User->>Django: Start an A/B test (select control + treatment versions)
   Django->>MlflowClient: Fetch metrics for both versions/runs

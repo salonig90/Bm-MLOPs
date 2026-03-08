@@ -4,6 +4,13 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">BTCUSD Forecasting Dashboard Overview</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
+        <form action="{% url 'run_pipeline' %}" method="POST" class="me-2">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-primary">
+                <span data-feather="play"></span>
+                Run Pipeline
+            </button>
+        </form>
         <div class="btn-group me-2">
             <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
             <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
@@ -16,30 +23,39 @@
 </div>
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="card text-white bg-primary">
             <div class="card-body">
-                <h5 class="card-title">Latest Prediction</h5>
-                <p class="card-text h3">$ {{ latest_prediction }}</p>
-                <small>From best registered model</small>
+                <h5 class="card-title">Latest BTC Price</h5>
+                <p class="card-text h3">$ {{ latest_price }}</p>
+                <small>Current Close Price</small>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h5 class="card-title">Linear Prediction</h5>
+                <p class="card-text h3">$ {{ latest_prediction_lr }}</p>
+                <small>Next Hour Forecast</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-dark">
+            <div class="card-body">
+                <h5 class="card-title">ARIMA Prediction</h5>
+                <p class="card-text h3">$ {{ latest_prediction_arima }}</p>
+                <small>Next Hour Forecast</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
         <div class="card text-white bg-success">
             <div class="card-body">
                 <h5 class="card-title">Best Model Accuracy</h5>
                 <p class="card-text h3">{{ model_accuracy }}</p>
-                <small>Based on lowest MSE</small>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card text-white bg-info">
-            <div class="card-body">
-                <h5 class="card-title">Registered Model Versions</h5>
-                <p class="card-text h3">{{ latest_versions|length }}</p>
-                <small>Versions in MLflow Registry</small>
+                <small>Lowest MSE in Runs</small>
             </div>
         </div>
     </div>
@@ -109,8 +125,14 @@
         <h5 class="card-title mb-0">BTCUSD Price Forecast Visualization</h5>
     </div>
     <div class="card-body">
-        <div id="forecast-chart" style="height: 300px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border: 1px dashed #dee2e6;">
-            <p class="text-muted">Interactive Plotly visualization will be integrated here in Phase 4.</p>
+        <div id="forecast-chart" style="min-height: 400px;">
+            {% if plot_div %}
+                {{ plot_div|safe }}
+            {% else %}
+                <div style="height: 300px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border: 1px dashed #dee2e6;">
+                    <p class="text-muted">Data visualization loading or unavailable.</p>
+                </div>
+            {% endif %}
         </div>
     </div>
 </div>

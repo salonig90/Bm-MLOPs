@@ -39,6 +39,31 @@ Forecasting BTCUSD prices using historical market data with deep learning models
 - **A/B Testing**: Compare the performance of the current production model (Control) against a new challenger model (Treatment) in a live or simulated environment.
 - **ROI Analysis**: Quantify the financial impact of the model's predictions (e.g., simulated trading profits, risk reduction) to justify the project's value.
 
+### **7. Automated Scheduler**
+- **Scheduler**: A background process that automatically runs the ML pipeline at regular intervals.
+- **Task**: Retrains models and updates predictions every 15 minutes.
+- **Script**: `tasks.py` handles the scheduling using the `schedule` library.
+
+---
+
+## **How to Run**
+
+1. **Start MLflow Server**:
+   ```bash
+   ./ml/runmlflow.sh
+   ```
+
+2. **Start Django Dashboard**:
+   ```bash
+   python3 dashboard/manage.py runserver 0.0.0.0:8000
+   ```
+
+3. **Start Automated Scheduler**:
+   ```bash
+   python3 tasks.py
+   ```
+   *This will run the pipeline immediately and then every 15 minutes.*
+
 ---
 
 ## **Project Roadmap**
@@ -113,5 +138,5 @@ Forecasting BTCUSD prices using historical market data with deep learning models
     ```
 3.  **Run MLflow server**:
     ```bash
-    mlflow server --host 0.0.0.0 --port 5001 --backend-store-uri ./mlruns --allowed-hosts "*" --cors-allowed-origins "*"
+    mlflow server --host 0.0.0.0 --port 5001 --backend-store-uri ./ml/mlruns --allowed-hosts "*" --cors-allowed-origins "*"
     ```

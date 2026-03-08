@@ -9,18 +9,107 @@
     <div class="col-md-6">
         <div class="card text-white bg-success">
             <div class="card-body text-center">
-                <h5 class="card-title">Simulated Trading Profit</h5>
-                <p class="card-text display-4">${{ latest_roi.simulated_profit_usd|floatformat:2 }}</p>
-                <small>Calculated over {{ latest_roi.period }}</small>
+                <h5 class="card-title">Linear Regression ROI</h5>
+                <p class="card-text display-4">{{ lr_profit }} pts</p>
+                <div class="d-flex justify-content-between px-4 mt-2">
+                    <span>Win Rate: <strong>{{ lr_win_rate }}</strong></span>
+                    <span>Total Gains</span>
+                </div>
             </div>
         </div>
     </div>
     <div class="col-md-6">
-        <div class="card text-white bg-dark">
+        <div class="card text-white bg-primary">
             <div class="card-body text-center">
-                <h5 class="card-title">Risk Reduction</h5>
-                <p class="card-text display-4">{{ latest_roi.risk_reduction_pct|floatformat:1 }}%</p>
-                <small>Reduction in drawdown using model predictions</small>
+                <h5 class="card-title">ARIMA ROI</h5>
+                <p class="card-text display-4">{{ arima_profit }} pts</p>
+                <div class="d-flex justify-content-between px-4 mt-2">
+                    <span>Win Rate: <strong>{{ arima_win_rate }}</strong></span>
+                    <span>Total Gains</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Linear Regression Trading Signals</h5>
+                <span class="badge bg-light text-primary">Win Rate: {{ lr_win_rate }}</span>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-sm">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Close</th>
+                                <th>Predicted</th>
+                                <th>Action</th>
+                                <th>Potential Profit</th>
+                                <th>Result</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for signal in lr_signals %}
+                            <tr>
+                                <td>{{ signal.time }}</td>
+                                <td>${{ signal.last_close }}</td>
+                                <td>${{ signal.pred_next }}</td>
+                                <td><span class="badge bg-{{ signal.signal_class }}">{{ signal.signal }}</span></td>
+                                <td>{{ signal.potential_profit }} pts</td>
+                                <td><span class="badge bg-{{ signal.result_class }}">{{ signal.result }}</span></td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">No LR data found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">ARIMA Trading Signals</h5>
+                <span class="badge bg-light text-dark">Win Rate: {{ arima_win_rate }}</span>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-sm">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Close</th>
+                                <th>Predicted</th>
+                                <th>Action</th>
+                                <th>Potential Profit</th>
+                                <th>Result</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for signal in arima_signals %}
+                            <tr>
+                                <td>{{ signal.time }}</td>
+                                <td>${{ signal.last_close }}</td>
+                                <td>${{ signal.pred_next }}</td>
+                                <td><span class="badge bg-{{ signal.signal_class }}">{{ signal.signal }}</span></td>
+                                <td>{{ signal.potential_profit }} pts</td>
+                                <td><span class="badge bg-{{ signal.result_class }}">{{ signal.result }}</span></td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">No ARIMA data found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -28,7 +117,7 @@
 
 <div class="card mt-4">
     <div class="card-header">
-        <h5 class="card-title mb-0">ROI History</h5>
+        <h5 class="card-title mb-0">General ROI History</h5>
     </div>
     <div class="card-body">
         <table class="table table-hover">
