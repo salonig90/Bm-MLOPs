@@ -7,8 +7,8 @@ import os
 import warnings
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-MLRUNS_DIR = os.path.join(PROJECT_ROOT, "ml", "mlruns")
-os.environ["MLFLOW_TRACKING_URI"] = f"file:{MLRUNS_DIR}"
+# Use the running server to avoid local URI issues and disconnected UI
+mlflow.set_tracking_uri("http://127.0.0.1:5001")
 
 mlflow.set_experiment("BTCUSD_ARIMA_Forecasting")
 

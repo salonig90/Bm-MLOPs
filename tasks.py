@@ -17,9 +17,9 @@ def run_ml_pipeline():
     """
     logger.info("Starting Celery-scheduled ML pipeline run...")
     try:
-        # Using the same command as the 'Run Pipeline' button in the dashboard
+        # Using 'python' instead of 'python3' for Windows compatibility
         result = subprocess.run(
-            ["python3", PIPELINE_SCRIPT, "--models", "lr,arima"],
+            ["python", PIPELINE_SCRIPT, "--models", "lr,arima"],
             capture_output=True,
             text=True,
             check=True

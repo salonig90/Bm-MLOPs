@@ -11,10 +11,8 @@ def ab_testing_index(request):
     Displays current A/B tests between Linear Regression and ARIMA models.
     """
     # Configure MLflow
-    ml_dir = os.path.join(settings.BASE_DIR.parent, "ml")
-    mlruns_path = os.path.join(ml_dir, "mlruns")
-    tracking_uri = f"file://{mlruns_path}"
-    mlflow.set_tracking_uri(tracking_uri)
+    # Use the running server to avoid Model Registry unsupported URI errors on Windows
+    mlflow.set_tracking_uri("http://127.0.0.1:5001")
     client = MlflowClient()
 
     experiments = {

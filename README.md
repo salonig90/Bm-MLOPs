@@ -50,12 +50,12 @@ Forecasting BTCUSD prices using historical market data with deep learning models
 
 1. **Start MLflow Server**:
    ```bash
-   ./ml/runmlflow.sh
+   ./runmlflow.sh
    ```
 
 2. **Start Django Dashboard**:
    ```bash
-   python3 dashboard/manage.py runserver 0.0.0.0:8000
+   python dashboard/manage.py runserver 0.0.0.0:8000
    ```
 
 3. **Start Automated Scheduler**:

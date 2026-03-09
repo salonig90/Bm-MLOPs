@@ -14,10 +14,8 @@ def dashboard_overview(request):
     Fetches experiment data and model registry info from MLflow for the dashboard.
     """
     # Configure MLflow to use the correct tracking URI
-    ml_dir = os.path.join(settings.BASE_DIR.parent, "ml")
-    mlruns_path = os.path.join(ml_dir, "mlruns")
-    tracking_uri = f"file://{mlruns_path}"
-    mlflow.set_tracking_uri(tracking_uri)
+    # Use the running server to avoid Model Registry unsupported URI errors on Windows
+    mlflow.set_tracking_uri("http://127.0.0.1:5001")
     
     # Initialize MLflow Client
     client = MlflowClient()
@@ -160,8 +158,8 @@ def run_pipeline_view(request):
     if request.method == "POST":
         try:
             pipeline_path = os.path.join(settings.BASE_DIR.parent, "ml", "pipeline.py")
-            # Run in background
-            subprocess.Popen(["python3", pipeline_path, "--models", "lr,arima"])
+            # Run in background (Using 'python' instead of 'python3' for Windows compatibility)
+            subprocess.Popen(["python", pipeline_path, "--models", "lr,arima"])
         except Exception as e:
             print(f"Error triggering pipeline: {e}")
             
