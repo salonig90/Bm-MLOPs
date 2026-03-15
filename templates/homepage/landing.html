@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX ALPHA | Neural Market Intelligence</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Load Plotly.js first -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        :root {
+            --vortex-violet: #8b5cf6;
+            --vortex-glow: #c084fc;
+            --vortex-bg: #030014;
+            --vortex-surface: #0a0118;
+            --vortex-card: rgba(255, 255, 255, 0.03);
+            --vortex-border: rgba(139, 92, 246, 0.3);
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --accent-green: #10b981;
+            --accent-red: #f43f5e;
+        }
+
+        body {
+            background-color: var(--vortex-bg);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(192, 132, 252, 0.1) 0%, transparent 50%);
+        }
+
+        h1, h2, h3, .brand-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+        }
+
+        /* --- Custom Navbar --- */
+        .navbar {
+            background: rgba(3, 0, 20, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--vortex-border);
+            padding: 1rem 0;
+        }
+
+        .brand-text {
+            font-size: 1.5rem;
+            letter-spacing: -2px;
+            color: white !important;
+            text-decoration: none;
+        }
+
+        .brand-text span {
+            color: var(--vortex-violet);
+            text-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+        }
+
+        .nav-link {
+            color: var(--text-primary) !important;
+            font-weight: 600;
+            margin: 0 1rem;
+            opacity: 0.6;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+            color: var(--vortex-violet) !important;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            padding: 10rem 0 6rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            line-height: 1;
+            letter-spacing: -4px;
+            margin-bottom: 2rem;
+            background: linear-gradient(to bottom, #fff 40%, var(--vortex-violet));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+
+        .btn-main {
+            background: var(--vortex-violet);
+            color: white;
+            font-weight: 800;
+            padding: 1.2rem 3rem;
+            border-radius: 100px;
+            text-decoration: none;
+            display: inline-block;
+            transition: 0.4s;
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-main:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 50px rgba(139, 92, 246, 0.5);
+            color: white;
+        }
+
+        /* --- Asset Grid --- */
+        .asset-section {
+            margin-top: -2rem;
+        }
+
+        .asset-card {
+            background: var(--vortex-surface);
+            border: 1px solid var(--vortex-border);
+            border-radius: 2rem;
+            padding: 2rem;
+            cursor: pointer;
+            transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            height: 100%;
+        }
+
+        .asset-card:hover, .asset-card.active {
+            background: rgba(139, 92, 246, 0.05);
+            border-color: var(--vortex-violet);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .asset-id {
+            color: var(--text-secondary);
+            font-weight: 800;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .asset-val {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .asset-pct {
+            font-weight: 700;
+            padding: 0.4rem 1rem;
+            border-radius: 0.8rem;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+
+        .up { background: rgba(16, 185, 129, 0.1); color: var(--accent-green); }
+        .down { background: rgba(244, 63, 94, 0.1); color: var(--accent-red); }
+
+        /* --- Main Analysis Module --- */
+        .analysis-module {
+            margin: 6rem 0;
+            background: linear-gradient(145deg, #0a0118, #05000a);
+            border: 1px solid var(--vortex-border);
+            border-radius: 3rem;
+            padding: 4rem;
+        }
+
+        .analysis-header h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 1.5rem;
+            letter-spacing: -2px;
+        }
+
+        .analysis-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+        }
+
+        .prediction-card {
+            background: rgba(139, 92, 246, 0.05);
+            border: 1px solid var(--vortex-border);
+            border-radius: 2.5rem;
+            padding: 2.5rem;
+            text-align: center;
+        }
+
+        .prediction-label {
+            color: var(--vortex-violet);
+            font-weight: 800;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            margin-bottom: 0.8rem;
+        }
+
+        .prediction-price {
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            font-weight: 800;
+            font-family: 'Space Grotesk';
+        }
+
+        .graph-outer {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border-radius: 2.5rem;
+            padding: 1.5rem;
+            margin-top: 4rem;
+            border: 1px solid var(--vortex-border);
+            min-height: 500px;
+            width: 100%;
+            overflow: visible;
+        }
+
+        .tab-content { display: none; width: 100%; min-height: 450px; }
+        .tab-content.active { display: block; animation: fadeIn 0.8s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* --- Footer --- */
+        .footer {
+            padding: 6rem 0;
+            border-top: 1px solid var(--vortex-border);
+            text-align: center;
+        }
+
+        @media (max-width: 992px) {
+            .analysis-module { padding: 2.5rem; margin: 4rem 0; border-radius: 2rem; }
+            .prediction-card { margin-top: 2rem; padding: 2rem; }
+            .hero { padding: 8rem 0 4rem; }
+            .asset-section { margin-top: 0; }
+            .hero h1 { font-size: 3.5rem; }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.8rem; letter-spacing: -2px; }
+            .hero p { font-size: 1rem; padding: 0 1rem; }
+            .analysis-header h2 { font-size: 2.2rem; }
+            .asset-card { padding: 1.5rem; border-radius: 1.5rem; }
+            .asset-val { font-size: 1.5rem; }
+        }
+
+        @media (max-width: 576px) {
+            .navbar { padding: 0.6rem 0; }
+            .brand-text { font-size: 1.1rem; }
+            .btn-main { padding: 1rem 2rem; width: 100%; font-size: 0.9rem; }
+            .graph-outer { min-height: 300px; padding: 0.5rem; border-radius: 1.5rem; margin-top: 2rem; }
+            .analysis-module { padding: 1.5rem; border-radius: 1.5rem; }
+            .prediction-price { font-size: 2rem; }
+            .footer { padding: 4rem 0; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+        <a class="brand-text" href="/">
+            <span>VORTEX</span> ALPHA
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navContent">
+            <div class="ms-auto d-flex flex-column flex-lg-row align-items-center">
+                <a class="nav-link py-2" href="/dashboard/">Dashboard</a>
+                <a class="nav-link py-2" href="/drift/">Analytics</a>
+                <a class="nav-link py-2" href="/roi/">Performance</a>
+                <a class="btn btn-main btn-sm py-2 px-4 ms-lg-4 mt-3 mt-lg-0" href="/dashboard/">Terminal</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="container px-4">
+        <h1>INTELLIGENCE<br>BY DESIGN</h1>
+        <p>Quantitative forecasting for the next era of assets. VORTEX integrates neural architectures with real-time market dynamics to decode the future.</p>
+        <a href="/dashboard/" class="btn btn-main">Launch Terminal</a>
+    </div>
+</section>
+
+<div class="container asset-section px-4">
+    <div class="row g-4">
+        {% for asset in asset_info %}
+        <div class="col-sm-6 col-lg-3">
+            <div class="asset-card {% if forloop.first %}active{% endif %}" onclick="switchAsset('{{ asset.name }}', this)">
+                <div class="asset-id">{{ asset.name }}</div>
+                <div class="asset-val">${{ asset.price }}</div>
+                <div class="asset-pct {% if asset.is_positive %}up{% else %}down{% endif %}">
+                    {{ asset.pct_change }}
+                </div>
+                <div class="mt-4" style="height: 50px; opacity: 0.4;">
+                    {{ asset.mini_plot|safe }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="analysis-module">
+        <div class="row align-items-center">
+            <div class="col-lg-7 analysis-header">
+                <h2 id="module-title">BTCUSD Intelligence</h2>
+                <p>Advanced neural processing of momentum, trend persistence, and volatility regimes. Optimized for high-probability predictive cycles.</p>
+            </div>
+            <div class="col-lg-5" id="btc-target-container">
+                <div class="prediction-card">
+                    <div class="prediction-label">AI 24H TARGET</div>
+                    <div class="prediction-price">${{ latest_prediction_lr }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="graph-outer">
+            {% for asset in asset_info %}
+            <div id="plot-{{ asset.name }}" class="tab-content {% if forloop.first %}active{% endif %}">
+                {{ asset.main_plot|safe }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container px-4">
+        <div class="brand-text mb-4"><span>VORTEX</span> ALPHA</div>
+        <div class="d-flex flex-wrap justify-content-center gap-3 gap-md-5 mb-5">
+            <a href="/dashboard/" class="nav-link m-0">Terminal</a>
+            <a href="/drift/" class="nav-link m-0">Drift</a>
+            <a href="/roi/" class="nav-link m-0">Impact</a>
+            <a href="/ab-testing/" class="nav-link m-0">A/B Testing</a>
+        </div>
+        <p class="small text-muted mt-5">&copy; 2026 VORTEX ALPHA. Neural Market Intelligence.</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function switchAsset(name, el) {
+        document.querySelectorAll('.asset-card').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
+        
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        const activePlot = document.getElementById('plot-' + name);
+        if (activePlot) activePlot.classList.add('active');
+        
+        document.getElementById('module-title').innerText = name + ' Intelligence';
+        
+        const btcBox = document.getElementById('btc-target-container');
+        if (name === 'BTCUSD') {
+            btcBox.style.display = 'block';
+        } else {
+            btcBox.style.display = 'none';
+        }
+
+        // Critical: Resize Plotly
+        window.dispatchEvent(new Event('resize'));
+    }
+
+    // Ensure graphs are sized correctly on load
+    window.addEventListener('load', () => {
+        const resize = () => window.dispatchEvent(new Event('resize'));
+        setTimeout(resize, 500);
+        setTimeout(resize, 1500);
+        setTimeout(resize, 3000);
+    });
+</script>
+</body>
+</html>

@@ -10,7 +10,7 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..
 # Use the running server to avoid local URI issues and disconnected UI
 mlflow.set_tracking_uri("http://127.0.0.1:5001")
 
-mlflow.set_experiment("BTCUSD_ARIMA_Forecasting")
+mlflow.set_experiment("BTC-USD_Arima_Saloni")
 
 # Suppress ARIMA warnings
 warnings.filterwarnings("ignore")
@@ -36,7 +36,7 @@ def train_arima_model(p=5, d=1, q=0):
     split_point = int(len(series) * 0.8)
     train, test = series[0:split_point], series[split_point:]
     
-    mlflow.set_experiment("BTCUSD_ARIMA_Forecasting")
+    mlflow.set_experiment("BTC-USD_Arima_Saloni")
     with mlflow.start_run(run_name="ARIMA_Model"):
         # Log parameters
         mlflow.log_param("model_type", "ARIMA")

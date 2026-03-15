@@ -12,7 +12,7 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..
 # Use the running server to avoid local URI issues and disconnected UI
 mlflow.set_tracking_uri("http://127.0.0.1:5001")
 
-mlflow.set_experiment("BTCUSD_Linear_Regression")
+mlflow.set_experiment("BTC-USD_LR_Saloni")
 
 def train_linear_regression(test_size=0.2):
     """
@@ -38,7 +38,7 @@ def train_linear_regression(test_size=0.2):
     # Split data
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, shuffle=False)
     
-    mlflow.set_experiment("BTCUSD_Linear_Regression")
+    mlflow.set_experiment("BTC-USD_LR_Saloni")
     with mlflow.start_run(run_name="Linear_Regression_Baseline"):
         # Log parameters
         mlflow.log_param("model_type", "LinearRegression")
@@ -71,13 +71,13 @@ def train_linear_regression(test_size=0.2):
         model_info = mlflow_sklearn.log_model(
             model, 
             "model",
-            registered_model_name="BTCUSD_Linear_Regression"
+            registered_model_name="BTC-USD_LR_Saloni"
         )
         
         print(f"Linear Regression Training complete.")
         print(f"MSE: {mse:.4f}, MAE: {mae:.4f}")
         print(f"Predicted Next Hour Close: {pred_next:.4f}")
-        print(f"Model registered as 'BTCUSD_Linear_Regression' at: {model_info.model_uri}")
+        print(f"Model registered as 'BTC-USD_LR_Saloni' at: {model_info.model_uri}")
         
         return model, mse, mae, pred_next
 

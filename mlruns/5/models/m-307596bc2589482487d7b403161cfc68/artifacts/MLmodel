@@ -1,0 +1,23 @@
+artifact_path: file:C:/Users/user/Desktop/Python Training Bm/ML/timeseries/mlruns/5/models/m-307596bc2589482487d7b403161cfc68/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.13.5
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.6.1
+    skops_trusted_types: null
+mlflow_version: 3.10.1
+model_id: m-307596bc2589482487d7b403161cfc68
+model_size_bytes: 685
+model_uuid: m-307596bc2589482487d7b403161cfc68
+prompts: null
+run_id: 07960158244e43f587ccfffd8d68a77c
+utc_time_created: '2026-03-15 08:52:27.432052'
